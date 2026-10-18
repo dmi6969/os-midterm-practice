@@ -54,6 +54,54 @@ w5-v06b	hang
 w5-v09a	102400,3145728
 w5-c1	65536
 w5-s2	124
-w5-s3	status=137 elapsed=9s
+w5-s3	status=137 elapsed=8s
 w5-s5	137
 w5-e1	11
+s2-w2-12	4
+s2-w2-13	3
+s2-w2-17	C
+s2-w2-18	HEYlo world
+s2-w2-19	2
+s2-w2-33	BACD
+s2-w2-34	one three
+s2-w2-35	4096
+s2-w3-01	3
+s2-w3-02	6
+s2-w3-03	5
+s2-w3-04	4
+s2-w3-05	4
+s2-w3-06	8
+s2-w3-07	2
+s2-w3-08	3
+s2-w3-09	hello
+s2-w3-10	1
+s2-w3-11	c1 0
+s2-w3-16	exec: No such file or directory|127
+s2-w3-36	3
+s2-w3-43	2
+s2-w3-20	a,c,d
+s2-w3-24	cd,abs,echo,export
+s2-w3-25	unchanged
+s2-w3-40	unchanged
+s2-w4-08	132
+s2-w5-01	0 2
+s2-w5-02	3 7
+s2-w5-03	3
+s2-w5-05	-1 EBADF unchanged
+s2-w5-06	-1 EBADF
+s2-w5-18	3
+s2-w5-19	3
+s2-w5-21	spin
+s2-w5-22	3000
+s2-w5-23	hang
+s2-w5-25	65536
+s2-w5-32	exit 0
+s2-w5-33	SIG_ERR killed 9
+s2-w5-38	-1 EPIPE
+s2-w5-40	141 141 143
+s2-w5-15	10
+s2-w5-16	1
+s2-w5-30	130
+s2-w5-36	5
+s2-w5-37	124
+s2-w5-39	141 0 0

@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OS 期中練習</title>
+<title>OS 期中練習 · 第一回</title>
 <style>
 :root {
   --bg: #f5f6f8; --card: #ffffff; --text: #1c2330; --muted: #677084; --border: #dde2ea;
   --accent: #2b67d6; --accent-soft: #e7effc; --ok: #17804a; --ok-soft: #e3f4ea;
-  --bad: #c42c2c; --bad-soft: #fbe9e9; --code-bg: #f0f2f5; --cell: #eceff3; --shadow: 0 1px 3px rgba(20,30,50,.08);
+  --bad: #c42c2c; --bad-soft: #fbe9e9; --fix: #b26a00; --fix-soft: #fdf1dc;
+  --code-bg: #f0f2f5; --cell: #eceff3; --shadow: 0 1px 3px rgba(20,30,50,.08);
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #13161b; --card: #1c2027; --text: #e5e8ed; --muted: #98a1b0; --border: #2e343e;
     --accent: #6c9eff; --accent-soft: #1d2a42; --ok: #4fc487; --ok-soft: #163325;
-    --bad: #ff7373; --bad-soft: #3a1c1c; --code-bg: #252a32; --cell: #262b33; --shadow: none;
+    --bad: #ff7373; --bad-soft: #3a1c1c; --fix: #f0b048; --fix-soft: #3a2c12;
+    --code-bg: #252a32; --cell: #262b33; --shadow: none;
   }
 }
 * { box-sizing: border-box; }
@@ -24,6 +26,7 @@ body {
   font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
 }
 button { font: inherit; color: inherit; cursor: pointer; }
+a { color: var(--accent); }
 .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
 
 /* header */
@@ -39,11 +42,28 @@ header { background: var(--card); border-bottom: 1px solid var(--border); positi
 .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 10px; align-items: center; }
 .tbtn {
   border: 1px solid var(--border); background: var(--card); border-radius: 8px;
-  padding: 6px 12px; font-size: 14px; min-height: 36px;
+  padding: 6px 12px; font-size: 14px; min-height: 36px; text-decoration: none; color: var(--text);
+  display: inline-flex; align-items: center;
 }
 .tbtn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.tbtn:disabled { opacity: .45; cursor: not-allowed; }
 .tbtn.danger { color: var(--bad); }
-.hint { font-size: 13px; color: var(--muted); margin-left: auto; }
+.tbtn.redo { color: var(--fix); border-color: var(--fix); font-weight: 600; }
+.seg { display: inline-flex; }
+.seg .tbtn { border-radius: 0; margin-left: -1px; }
+.seg .tbtn:first-child { border-radius: 8px 0 0 8px; margin-left: 0; }
+.seg .tbtn:last-child { border-radius: 0 8px 8px 0; }
+.seg .tbtn[aria-pressed="true"] { position: relative; z-index: 1; }
+.spacer { flex: 1; }
+.hint { font-size: 13px; color: var(--muted); width: 100%; }
+
+/* redo banner */
+.banner {
+  border: 1px solid var(--fix); background: var(--fix-soft); border-radius: 10px; padding: 10px 14px;
+  margin-bottom: 12px; font-size: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+.banner b { font-variant-numeric: tabular-nums; }
+.banner .tbtn { min-height: 32px; padding: 4px 10px; }
 
 /* grid */
 #grid { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 12px; }
@@ -56,14 +76,16 @@ header { background: var(--card); border-bottom: 1px solid var(--border); positi
 }
 .cell.ok { background: var(--ok-soft); color: var(--ok); border-color: var(--ok); }
 .cell.bad { background: var(--bad-soft); color: var(--bad); border-color: var(--bad); }
+.cell.fixed { background: var(--fix-soft); color: var(--fix); border-color: var(--fix); }
 .cell.cur { outline: 2px solid var(--accent); outline-offset: 1px; font-weight: 700; }
 .empty { color: var(--muted); font-size: 14px; padding: 6px 2px; }
 
 /* card */
 .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 18px 16px; box-shadow: var(--shadow); }
-.qhead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.qhead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
 .qno { font-weight: 700; font-size: 18px; }
 .badge { font-size: 12px; padding: 2px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.badge.again { background: var(--fix-soft); color: var(--fix); }
 .qhead .of { color: var(--muted); font-size: 14px; margin-left: auto; }
 .stem { overflow-wrap: anywhere; }
 .stem p { margin: 0 0 10px; }
@@ -114,9 +136,11 @@ th { background: var(--code-bg); }
 .small { font-size: 13px; color: var(--muted); }
 
 .result { margin-top: 16px; border-top: 1px dashed var(--border); padding-top: 14px; }
-.verdict { font-weight: 700; font-size: 17px; margin-bottom: 6px; }
+.vrow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+.verdict { font-weight: 700; font-size: 17px; }
 .verdict.ok { color: var(--ok); }
 .verdict.bad { color: var(--bad); }
+.note { font-size: 13px; color: var(--fix); font-weight: 600; }
 .kv { margin: 4px 0; overflow-wrap: anywhere; }
 .kv .k { color: var(--muted); }
 .meta { display: inline-flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 6px; }
@@ -142,6 +166,7 @@ th { background: var(--code-bg); }
   .hint { display: none; }
   .stats { gap: 10px; font-size: 13px; }
   .title { font-size: 16px; }
+  .tbtn { padding: 6px 10px; }
   .nav { position: sticky; bottom: 0; background: var(--bg); margin: 0 -16px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); }
   .nav button { max-width: none; }
 }
@@ -151,11 +176,12 @@ th { background: var(--code-bg); }
 <header>
   <div class="wrap">
     <div class="hrow">
-      <div class="title">OS 期中練習</div>
+      <div class="title">OS 期中練習 · 第一回</div>
       <div class="stats">
         <span>已作答 <b id="sAns">0</b> / <b id="sTot">0</b></span>
         <span>答對 <b id="sOk">0</b></span>
         <span>正確率 <b id="sAcc">–</b></span>
+        <span>錯題 <b id="sBad">0</b></span>
       </div>
     </div>
   </div>
@@ -165,10 +191,18 @@ th { background: var(--code-bg); }
 <main class="wrap">
   <div class="toolbar">
     <button class="tbtn" id="bGrid" aria-pressed="false">題號</button>
-    <button class="tbtn" id="bWrong" aria-pressed="false">只看答錯的題目</button>
+    <span class="seg" role="group" aria-label="篩選">
+      <button class="tbtn" id="fAll" aria-pressed="true">全部</button>
+      <button class="tbtn" id="fWrong" aria-pressed="false">只看答錯</button>
+      <button class="tbtn" id="fEver" aria-pressed="false">曾經答錯</button>
+    </span>
+    <button class="tbtn redo" id="bRedo">重做錯題</button>
+    <span class="spacer"></span>
+    <a class="tbtn" id="otherSet" href="os-midterm-practice-2.html">第二回 →</a>
     <button class="tbtn danger" id="bReset">全部重來</button>
-    <span class="hint">← → 換題 · Enter 送出 / 下一題 · 1–6 選選項</span>
+    <span class="hint">← → 換題 · Enter 送出 / 下一題 · 1–7 選選項 · 「重做錯題」把目前答錯的題目全部解鎖重新作答</span>
   </div>
+  <div id="banner"></div>
   <div id="grid" hidden></div>
   <article class="card" id="card"></article>
   <div class="nav">
@@ -188,7 +222,9 @@ th { background: var(--code-bg); }
   var TYPE = { single: '單選', multi: '多選', fill: '填充' };
 
   // ---------- 狀態（localStorage 讀寫都包 try/catch） ----------
-  function fresh() { return { ans: {}, cur: QS.length ? QS[0].id : null, wrongOnly: false, grid: false }; }
+  // ans[id] = 目前這題的作答 {r, ok}；hist[id] = 這題答錯過幾次（重做後也保留）
+  // mode: all / wrong / ever / redo；redo = 這一輪要重做的題目 id
+  function fresh() { return { ans: {}, hist: {}, cur: QS.length ? QS[0].id : null, mode: 'all', redo: [], grid: false }; }
   function load() {
     try {
       var s = JSON.parse(localStorage.getItem(KEY));
@@ -200,15 +236,23 @@ th { background: var(--code-bg); }
   var st = load();
   var byId = {};
   QS.forEach(function (q, i) { byId[q.id] = i; });
-  if (!(st.cur in byId)) st.cur = QS.length ? QS[0].id : null;
-  // 題目改版後，丟掉對不上的舊紀錄（題目不存在、或作答型態和題型不符）
+  // 舊版紀錄相容：補上新欄位、丟掉對不上的紀錄
+  if (!st.hist || typeof st.hist !== 'object') st.hist = {};
+  if (!st.mode) st.mode = st.wrongOnly ? 'wrong' : 'all';
+  delete st.wrongOnly;
+  if (!Array.isArray(st.redo)) st.redo = [];
   Object.keys(st.ans).forEach(function (id) {
     var q = QS[byId[id]], r = st.ans[id] && st.ans[id].r;
     var fits = q && (q.type === 'fill' ? typeof r === 'string'
       : q.type === 'single' ? typeof r === 'number' && r < q.opts.length
       : Array.isArray(r) && r.every(function (i) { return i < q.opts.length; }));
     if (!fits) delete st.ans[id];
+    else if (!st.ans[id].ok && !st.hist[id]) st.hist[id] = 1;
   });
+  Object.keys(st.hist).forEach(function (id) { if (!(id in byId)) delete st.hist[id]; });
+  st.redo = st.redo.filter(function (id) { return id in byId; });
+  if (st.mode === 'redo' && !st.redo.length) st.mode = 'all';
+  if (!(st.cur in byId)) st.cur = QS.length ? QS[0].id : null;
 
   var draft = {};   // 尚未送出的選擇（不存檔）
 
@@ -239,16 +283,25 @@ th { background: var(--code-bg); }
   }
 
   // ---------- 清單與統計 ----------
-  function wrongList() {
-    var out = [];
-    QS.forEach(function (q, i) { var r = st.ans[q.id]; if (r && !r.ok) out.push(i); });
-    return out;
+  function idxWhere(f) { var out = []; QS.forEach(function (q, i) { if (f(q)) out.push(i); }); return out; }
+  function isWrong(q) { var r = st.ans[q.id]; return !!(r && !r.ok); }
+  function wrongList() { return idxWhere(isWrong); }
+  function list() {
+    if (st.mode === 'wrong') return wrongList();
+    if (st.mode === 'ever') return idxWhere(function (q) { return st.hist[q.id] > 0; });
+    if (st.mode === 'redo') return st.redo.map(function (id) { return byId[id]; });
+    return QS.map(function (_, i) { return i; });
   }
-  function list() { return st.wrongOnly ? wrongList() : QS.map(function (_, i) { return i; }); }
   function stats() {
-    var n = 0, ok = 0;
-    QS.forEach(function (q) { var r = st.ans[q.id]; if (r) { n++; if (r.ok) ok++; } });
-    return { n: n, ok: ok };
+    var n = 0, ok = 0, bad = 0;
+    QS.forEach(function (q) { var r = st.ans[q.id]; if (r) { n++; if (r.ok) ok++; else bad++; } });
+    return { n: n, ok: ok, bad: bad };
+  }
+  function cellClass(q) {
+    var r = st.ans[q.id];
+    if (!r) return '';
+    if (!r.ok) return ' bad';
+    return st.hist[q.id] > 0 ? ' fixed' : ' ok';
   }
 
   var $ = function (id) { return document.getElementById(id); };
@@ -266,8 +319,44 @@ th { background: var(--code-bg); }
     $('sAns').textContent = s.n;
     $('sTot').textContent = QS.length;
     $('sOk').textContent = s.ok;
+    $('sBad').textContent = s.bad;
     $('sAcc').textContent = s.n ? Math.round(s.ok / s.n * 1000) / 10 + '%' : '–';
     $('pbar').style.width = (QS.length ? s.n / QS.length * 100 : 0) + '%';
+  }
+
+  function renderToolbar() {
+    $('fAll').setAttribute('aria-pressed', st.mode === 'all' ? 'true' : 'false');
+    $('fWrong').setAttribute('aria-pressed', st.mode === 'wrong' ? 'true' : 'false');
+    $('fEver').setAttribute('aria-pressed', st.mode === 'ever' ? 'true' : 'false');
+    var w = stats().bad;
+    var b = $('bRedo');
+    b.textContent = '重做錯題' + (w ? '（' + w + '）' : '');
+    b.disabled = !w;
+  }
+
+  function renderBanner() {
+    var box = $('banner');
+    box.innerHTML = '';
+    if (st.mode !== 'redo') return;
+    var total = st.redo.length, done = 0, ok = 0;
+    st.redo.forEach(function (id) { var r = st.ans[id]; if (r) { done++; if (r.ok) ok++; } });
+    var bad = done - ok;
+    var bn = h('div', 'banner');
+    bn.appendChild(h('span', null, '錯題重做：已作答 <b>' + done + '</b> / <b>' + total + '</b>，訂正 <b>' + ok + '</b> 題' + (bad ? '，仍答錯 <b>' + bad + '</b> 題' : '')));
+    if (done === total) {
+      bn.appendChild(h('span', null, bad ? '— 這一輪做完了。' : '— 全部訂正！🎉'));
+      if (bad) {
+        var again = h('button', 'tbtn redo', '再重做仍答錯的 ' + bad + ' 題');
+        again.id = 'bRedoAgain';
+        again.addEventListener('click', startRedo);
+        bn.appendChild(again);
+      }
+    }
+    var exit = h('button', 'tbtn', '結束重做');
+    exit.id = 'bRedoExit';
+    exit.addEventListener('click', function () { setMode('all'); });
+    bn.appendChild(exit);
+    box.appendChild(bn);
   }
 
   function renderGrid() {
@@ -276,17 +365,19 @@ th { background: var(--code-bg); }
     g.hidden = !st.grid;
     if (!st.grid) return;
     g.innerHTML = '';
+    var label = { all: '', wrong: '（目前只顯示答錯的題目）', ever: '（目前只顯示曾經答錯的題目）', redo: '（目前只顯示這一輪要重做的題目）' }[st.mode];
     g.appendChild(h('div', 'legend',
       '<span><i style="background:var(--cell)"></i>未作答</span>' +
       '<span><i style="background:var(--ok-soft);border:1px solid var(--ok)"></i>答對</span>' +
       '<span><i style="background:var(--bad-soft);border:1px solid var(--bad)"></i>答錯</span>' +
-      (st.wrongOnly ? '<span>（目前只顯示答錯的題目）</span>' : '')));
+      '<span><i style="background:var(--fix-soft);border:1px solid var(--fix)"></i>重做後答對</span>' +
+      (label ? '<span>' + label + '</span>' : '')));
     var L = list();
-    if (!L.length) { g.appendChild(h('div', 'empty', '目前沒有答錯的題目。')); return; }
+    if (!L.length) { g.appendChild(h('div', 'empty', emptyText())); return; }
     var wrap = h('div', 'cells');
     L.forEach(function (i) {
-      var q = QS[i], r = st.ans[q.id];
-      var b = h('button', 'cell' + (r ? (r.ok ? ' ok' : ' bad') : '') + (q.id === st.cur ? ' cur' : ''), String(i + 1));
+      var q = QS[i];
+      var b = h('button', 'cell' + cellClass(q) + (q.id === st.cur ? ' cur' : ''), String(i + 1));
       b.title = '第 ' + (i + 1) + ' 題';
       b.addEventListener('click', function () { go(q.id); });
       wrap.appendChild(b);
@@ -294,13 +385,16 @@ th { background: var(--code-bg); }
     g.appendChild(wrap);
   }
 
+  function emptyText() {
+    return { wrong: '目前沒有答錯的題目。', ever: '還沒有答錯過的題目。', redo: '沒有要重做的題目。', all: '沒有題目。' }[st.mode];
+  }
+
   function renderCard() {
     var card = $('card');
     card.innerHTML = '';
     var L = list();
-    $('bWrong').setAttribute('aria-pressed', st.wrongOnly ? 'true' : 'false');
     if (!L.length) {
-      card.appendChild(h('div', 'empty', st.wrongOnly ? '目前沒有答錯的題目。按「只看答錯的題目」可回到全部題目。' : '沒有題目。'));
+      card.appendChild(h('div', 'empty', emptyText() + (st.mode !== 'all' ? ' 按「全部」可回到全部題目。' : '')));
       $('pos').textContent = '';
       $('bPrev').disabled = $('bNext').disabled = true;
       return;
@@ -309,13 +403,15 @@ th { background: var(--code-bg); }
     if (L.indexOf(idx) < 0) { idx = L[0]; st.cur = QS[idx].id; }
     var q = QS[idx], rec = st.ans[q.id], locked = !!rec;
     var p = L.indexOf(idx);
-    $('pos').textContent = st.wrongOnly ? '錯題 ' + (p + 1) + ' / ' + L.length : (idx + 1) + ' / ' + QS.length;
+    var prefix = { all: '', wrong: '錯題 ', ever: '曾錯 ', redo: '重做 ' }[st.mode];
+    $('pos').textContent = st.mode === 'all' ? (idx + 1) + ' / ' + QS.length : prefix + (p + 1) + ' / ' + L.length;
     $('bPrev').disabled = p <= 0;
     $('bNext').disabled = p >= L.length - 1;
 
     var head = h('div', 'qhead');
     head.appendChild(h('span', 'qno', '第 ' + (idx + 1) + ' 題'));
     head.appendChild(h('span', 'badge', TYPE[q.type]));
+    if (!locked && st.hist[q.id] > 0) head.appendChild(h('span', 'badge again', '重做'));
     head.appendChild(h('span', 'of', '共 ' + QS.length + ' 題'));
     card.appendChild(head);
     card.appendChild(h('div', 'stem', q.q));
@@ -346,9 +442,9 @@ th { background: var(--code-bg); }
         var chosen = multi ? (resp || []).indexOf(i) >= 0 : resp === i;
         inp.checked = chosen;
         if (chosen && !locked) lab.classList.add('sel');
+        var isAns = multi ? q.ans.indexOf(i) >= 0 : q.ans === i;
         if (locked) {
           inp.disabled = true;
-          var isAns = multi ? q.ans.indexOf(i) >= 0 : q.ans === i;
           if (isAns) lab.classList.add('is-correct');
           else if (chosen) lab.classList.add('is-wrong');
         }
@@ -356,8 +452,7 @@ th { background: var(--code-bg); }
         lab.appendChild(h('span', 'ol', '(' + LET[i] + ')'));
         lab.appendChild(h('span', 'ot', o));
         if (locked) {
-          var isA = multi ? q.ans.indexOf(i) >= 0 : q.ans === i;
-          if (isA) lab.appendChild(h('span', 'mark', '✓'));
+          if (isAns) lab.appendChild(h('span', 'mark', '✓'));
           else if (chosen) lab.appendChild(h('span', 'mark', '✗'));
         }
         inp.addEventListener('change', function () { pick(q, i); });
@@ -395,7 +490,17 @@ th { background: var(--code-bg); }
   }
   function resultBox(q, rec) {
     var box = h('div', 'result');
-    box.appendChild(h('div', 'verdict ' + (rec.ok ? 'ok' : 'bad'), rec.ok ? '✓ 答對了' : '✗ 答錯了'));
+    var vr = h('div', 'vrow');
+    vr.appendChild(h('span', 'verdict ' + (rec.ok ? 'ok' : 'bad'), rec.ok ? '✓ 答對了' : '✗ 答錯了'));
+    var n = st.hist[q.id] || 0;
+    if (rec.ok && n > 0) vr.appendChild(h('span', 'note', '之前答錯 ' + n + ' 次，這次訂正了'));
+    if (!rec.ok) {
+      var rb = h('button', 'tbtn redo', '重做這題');
+      rb.id = 'bRedoOne';
+      rb.addEventListener('click', function () { redoOne(q.id); });
+      vr.appendChild(rb);
+    }
+    box.appendChild(vr);
     box.appendChild(h('div', 'kv', '<span class="k">正確答案：</span>' + answerText(q)));
     if (!rec.ok) box.appendChild(h('div', 'kv', '<span class="k">你的答案：</span>' + respText(q, rec.r)));
     var meta = h('div', 'meta');
@@ -440,12 +545,40 @@ th { background: var(--code-bg); }
     if (!q || st.ans[q.id] || !hasResp(q)) return;
     var r = draft[q.id];
     if (q.type === 'fill') r = r.trim();
-    st.ans[q.id] = { r: r, ok: grade(q, r) };
+    var ok = grade(q, r);
+    st.ans[q.id] = { r: r, ok: ok };
+    if (!ok) st.hist[q.id] = (st.hist[q.id] || 0) + 1;
     delete draft[q.id];
     save();
     render();
     var res = document.querySelector('#card .result');
     if (res && res.getBoundingClientRect().top > window.innerHeight - 120) res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ---------- 重做 ----------
+  function redoOne(id) {
+    delete st.ans[id];
+    delete draft[id];
+    save(); render();
+    var f = $('fillIn');
+    if (f && window.matchMedia('(min-width: 700px)').matches) f.focus();
+  }
+  function startRedo() {
+    var ids = wrongList().map(function (i) { return QS[i].id; });
+    if (!ids.length) return;
+    ids.forEach(function (id) { delete st.ans[id]; delete draft[id]; });
+    st.redo = ids;
+    st.mode = 'redo';
+    st.cur = ids[0];
+    save(); render();
+    window.scrollTo(0, 0);
+  }
+  function setMode(m) {
+    if (st.mode === 'redo' && m !== 'redo') st.redo = [];
+    st.mode = m;
+    var L = list();
+    if (L.length && L.indexOf(byId[st.cur]) < 0) st.cur = QS[L[0]].id;
+    save(); render();
   }
 
   function go(id) {
@@ -461,19 +594,18 @@ th { background: var(--code-bg); }
   }
   function next() { step(1); }
 
-  function render() { renderStats(); renderCard(); renderGrid(); }
+  function render() { renderStats(); renderToolbar(); renderBanner(); renderCard(); renderGrid(); }
 
   // ---------- 事件 ----------
   $('bPrev').addEventListener('click', function () { step(-1); });
   $('bNext').addEventListener('click', next);
   $('bGrid').addEventListener('click', function () { st.grid = !st.grid; save(); renderGrid(); });
-  $('bWrong').addEventListener('click', function () {
-    st.wrongOnly = !st.wrongOnly;
-    if (st.wrongOnly) { var w = wrongList(); if (w.length && w.indexOf(byId[st.cur]) < 0) st.cur = QS[w[0]].id; }
-    save(); render();
-  });
+  $('fAll').addEventListener('click', function () { setMode('all'); });
+  $('fWrong').addEventListener('click', function () { setMode('wrong'); });
+  $('fEver').addEventListener('click', function () { setMode('ever'); });
+  $('bRedo').addEventListener('click', startRedo);
   $('bReset').addEventListener('click', function () {
-    if (!confirm('確定要清除全部作答紀錄、從頭開始嗎？')) return;
+    if (!confirm('確定要清除全部作答紀錄（包括錯題紀錄），從頭開始嗎？')) return;
     var g = st.grid;
     st = fresh(); st.grid = g; draft = {};
     save(); render(); window.scrollTo(0, 0);

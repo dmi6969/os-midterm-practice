@@ -9,14 +9,14 @@ w2-16        6
 w2-v16       3
 w2-17-p1     two one
 w2-17-p2     one two
-verify/run_c.sh: 第 44 列： 1803 Segmentation fault      ./w2_buffers $p > out.txt 2> /dev/null
+verify/run_c.sh: 第 44 列：  959 Segmentation fault      ./w2_buffers $p > out.txt 2> /dev/null
 w2-17-p3     two
-verify/run_c.sh: 第 44 列： 1808 Segmentation fault      ./w2_buffers $p > out.txt 2> /dev/null
+verify/run_c.sh: 第 44 列：  964 Segmentation fault      ./w2_buffers $p > out.txt 2> /dev/null
 w2-17-p4     one
 w2-v17a      one three two
-verify/run_c.sh: 第 46 列： 1818 Segmentation fault      ./w2_buffers v17b > out.txt 2>&1
+verify/run_c.sh: 第 46 列：  974 Segmentation fault      ./w2_buffers v17b > out.txt 2>&1
 w2-v17b      one three
-verify/run_c.sh: 第 48 列： 1823 Segmentation fault      ./w2_buffers "w2-22-$m" > out.txt 2> e.txt
+verify/run_c.sh: 第 48 列：  979 Segmentation fault      ./w2_buffers "w2-22-$m" > out.txt 2> e.txt
 w2-22        fflush,full,return,exit
 == W3 ==
 w3-08        child 2|parent 1
@@ -48,9 +48,9 @@ w3-p2        4
 w3-v17a      3
 w3-19        1
 == W4 ==
-verify/run_c.sh: 第 87 列： 2036 Floating point exception./w4_exc fpe 2> /dev/null
+verify/run_c.sh: 第 87 列： 1192 Floating point exception./w4_exc fpe 2> /dev/null
 w4-n04       136
-verify/run_c.sh: 第 88 列： 2037 Segmentation fault      ./w4_exc segv 2> /dev/null
+verify/run_c.sh: 第 88 列： 1193 Segmentation fault      ./w4_exc segv 2> /dev/null
    (segv exit status: 139)
 pagesize=65536 faults=0
    (Linux 上 faults 應為 3；MSYS2 不一定支援 ru_minflt，僅供參考)
@@ -60,10 +60,10 @@ w5-v02a      0 3
 w5-v02b      3 5
    (pipe(p); pipe(q); → q = 5 6)
 w5-07a       spin
-   (cpu 3.00s in 5s)
+   (cpu 3.01s in 5s)
 w5-07b       1000
 w5-v07a      block
-   (cpu 0.07s in 5s)
+   (cpu 0.00s in 5s)
 w5-v07b      1808
    (reads: 4096 4096 1808 0)
    (r1: 4 4 2 0 waited=2.0)
@@ -79,9 +79,70 @@ w5-v06b      hang
 w5-v09a      102400,3145728
 w5-c1        65536
 w5-s2        124
-verify/run_c.sh: 第 118 列： 2126 Killed                  timeout -k 3 5 ./w5_pipe ignterm
-w5-s3        status=137 elapsed=9s
-verify/run_c.sh: 第 120 列： 2129 Killed                  timeout -s KILL 2 sleep 10 2> /dev/null
+verify/run_c.sh: 第 118 列： 1282 Killed                  timeout -k 3 5 ./w5_pipe ignterm
+w5-s3        status=137 elapsed=8s
+verify/run_c.sh: 第 120 列： 1285 Killed                  timeout -s KILL 2 sleep 10 2> /dev/null
 w5-s5        137
 w5-e1        11
+
+================ 第二回 ================
+== s2 W2 ==
+s2-w2-12     4
+s2-w2-13     3
+s2-w2-17     C
+s2-w2-18     HEYlo world
+s2-w2-19     2
+s2-w2-33     BACD
+s2-w2-34     one three
+verify/run_c.sh: 第 136 列： 1323 Segmentation fault      ./s2_w2 full > out.txt 2> /dev/null
+s2-w2-35     4096
+== s2 W3 ==
+s2-w3-01     3
+s2-w3-02     6
+s2-w3-03     5
+s2-w3-04     4
+s2-w3-05     4
+s2-w3-06     8
+s2-w3-07     2
+s2-w3-08     3
+s2-w3-09     hello
+   (parent stdout: done)
+s2-w3-10     1
+s2-w3-11     c1 0
+s2-w3-16     exec: No such file or directory|127
+s2-w3-36     3
+   (ppids: 1 1 1 1410)
+s2-w3-43     2
+s2-w3-20     a,c,d
+s2-w3-24     cd,abs,echo,export
+s2-w3-25     unchanged
+s2-w3-40     unchanged
+== s2 W4 ==
+verify/run_c.sh: 第 178 列： 1453 Illegal instruction     ./s2_w4 ill 2> /dev/null
+s2-w4-08     132
+== s2 W5 ==
+s2-w5-01     0 2
+s2-w5-02     3 7
+s2-w5-03     3
+s2-w5-05     -1 EBADF unchanged
+s2-w5-06     -1 EBADF
+s2-w5-18     3
+s2-w5-19     3
+s2-w5-21     spin
+   (cpu 3.01s in 3s)
+s2-w5-22     3000
+s2-w5-23     hang
+s2-w5-25     65536
+s2-w5-32     exit 0
+s2-w5-33     SIG_ERR killed 9
+s2-w5-38     -1 EPIPE
+s2-w5-40     141 141 143
+s2-w5-15     10
+   (screen: '', err.txt: cat: gone.txt: No such file or directory)
+err
+s2-w5-16     1
+s2-w5-30     130
+s2-w5-36     5
+s2-w5-37     124
+s2-w5-39     141 0 0
 done → /c/Users/wby24/OneDrive/桌面/問問題/verify/c_results.tsv
