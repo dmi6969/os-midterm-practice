@@ -1,0 +1,87 @@
+== W2 ==
+w2-07        AD
+w2-08        0 11
+w2-v08a      5
+w2-v08b      6
+w2-14        4 0
+w2-v14       200
+w2-16        6
+w2-v16       3
+w2-17-p1     two one
+w2-17-p2     one two
+verify/run_c.sh: 第 44 列： 1803 Segmentation fault      ./w2_buffers $p > out.txt 2> /dev/null
+w2-17-p3     two
+verify/run_c.sh: 第 44 列： 1808 Segmentation fault      ./w2_buffers $p > out.txt 2> /dev/null
+w2-17-p4     one
+w2-v17a      one three two
+verify/run_c.sh: 第 46 列： 1818 Segmentation fault      ./w2_buffers v17b > out.txt 2>&1
+w2-v17b      one three
+verify/run_c.sh: 第 48 列： 1823 Segmentation fault      ./w2_buffers "w2-22-$m" > out.txt 2> e.txt
+w2-22        fflush,full,return,exit
+== W3 ==
+w3-08        child 2|parent 1
+w3-14a       2
+w3-14b       6
+w3-15a       3
+w3-15b       1
+w3-16a       14
+w3-16b       8
+w3-f6        24
+w3-21a       run1 C0 D1 E1|run2 C1 D1 E1
+   (terminal run 1 lines: A D B E)
+w3-v21a      1
+   (file run 1 content: B A D E)
+w3-v21b      5
+   (file run 2 content: A C A D E)
+w3-v21c      4
+   (v21c on a terminal: 1 line)
+w3-22        AB
+w3-v22a      BAA
+w3-v22b      C
+w3-f1        15
+w3-f2        3
+w3-f5        32
+   (loop.c on a terminal: 15 lines)
+w3-f8        4
+w3-p2        4
+   (p2 processes: 6)
+w3-v17a      3
+w3-19        1
+== W4 ==
+verify/run_c.sh: 第 87 列： 2036 Floating point exception./w4_exc fpe 2> /dev/null
+w4-n04       136
+verify/run_c.sh: 第 88 列： 2037 Segmentation fault      ./w4_exc segv 2> /dev/null
+   (segv exit status: 139)
+pagesize=65536 faults=0
+   (Linux 上 faults 應為 3；MSYS2 不一定支援 ru_minflt，僅供參考)
+== W5 ==
+w5-02        3 4
+w5-v02a      0 3
+w5-v02b      3 5
+   (pipe(p); pipe(q); → q = 5 6)
+w5-07a       spin
+   (cpu 3.00s in 5s)
+w5-07b       1000
+w5-v07a      block
+   (cpu 0.07s in 5s)
+w5-v07b      1808
+   (reads: 4096 4096 1808 0)
+   (r1: 4 4 2 0 waited=2.0)
+w5-r1        2
+w5-r2        block
+w5-r3        0
+   (reads: 10 4 0)
+w5-01        sleep:130 cat:0
+w5-v01b      141 137 0
+w5-d1        pipe
+w5-06a       10,100
+w5-v06b      hang
+w5-v09a      102400,3145728
+w5-c1        65536
+w5-s2        124
+verify/run_c.sh: 第 118 列： 2126 Killed                  timeout -k 3 5 ./w5_pipe ignterm
+w5-s3        status=137 elapsed=9s
+verify/run_c.sh: 第 120 列： 2129 Killed                  timeout -s KILL 2 sleep 10 2> /dev/null
+w5-s5        137
+w5-e1        11
+done → /c/Users/wby24/OneDrive/桌面/問問題/verify/c_results.tsv

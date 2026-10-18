@@ -1,0 +1,6 @@
+# 驗證時產生的暫存檔與執行檔
+verify/work/
+verify/out/
+verify/_*
+*.exe
+node_modules/

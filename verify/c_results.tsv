@@ -1,0 +1,59 @@
+w2-07	AD
+w2-08	0 11
+w2-v08a	5
+w2-v08b	6
+w2-14	4 0
+w2-v14	200
+w2-16	6
+w2-v16	3
+w2-17-p1	two one
+w2-17-p2	one two
+w2-17-p3	two
+w2-17-p4	one
+w2-v17a	one three two
+w2-v17b	one three
+w2-22	fflush,full,return,exit
+w3-08	child 2|parent 1
+w3-14a	2
+w3-14b	6
+w3-15a	3
+w3-15b	1
+w3-16a	14
+w3-16b	8
+w3-f6	24
+w3-21a	run1 C0 D1 E1|run2 C1 D1 E1
+w3-v21a	1
+w3-v21b	5
+w3-v21c	4
+w3-22	AB
+w3-v22a	BAA
+w3-v22b	C
+w3-f1	15
+w3-f2	3
+w3-f5	32
+w3-f8	4
+w3-p2	4
+w3-v17a	3
+w3-19	1
+w4-n04	136
+w5-02	3 4
+w5-v02a	0 3
+w5-v02b	3 5
+w5-07a	spin
+w5-07b	1000
+w5-v07a	block
+w5-v07b	1808
+w5-r1	2
+w5-r2	block
+w5-r3	0
+w5-01	sleep:130 cat:0
+w5-v01b	141 137 0
+w5-d1	pipe
+w5-06a	10,100
+w5-v06b	hang
+w5-v09a	102400,3145728
+w5-c1	65536
+w5-s2	124
+w5-s3	status=137 elapsed=9s
+w5-s5	137
+w5-e1	11
